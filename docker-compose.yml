@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto-server
+    ports:
+      - "1885:1883"  # Broker expuesto localmente
+    env_file:
+      - .env
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+    networks:
+      - mqtt-net
+
+  mqtt-app:
+    build: .
+    container_name: mqtt-app
+    ports:
+      - "1883:1883"   # MQTT TCP
+      - "9001:9001"   # WebSocket MQTT
+      - "5000:5000"   # API REST
+    env_file:
+      - .env
+    command: ["python", "main.py"]
+    restart: unless-stopped
+    networks:
+      - mqtt-net
+    depends_on:
+      - mosquitto
+
+networks:
+  mqtt-net:
+    driver: bridge
