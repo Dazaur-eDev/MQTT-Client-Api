@@ -39,4 +39,5 @@ venv/
 .DS_Store
 Thumbs.db
 mosquitto/config/passwords
+mosquitto/data/mosquitto.db
 
