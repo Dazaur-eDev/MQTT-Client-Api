@@ -22,7 +22,7 @@ services:
     ports:
       - "1883:1883"   # MQTT TCP
       - "9001:9001"   # WebSocket MQTT
-      - "5000:5000"   # API REST
+      - "6000:6000"   # API REST
     env_file:
       - .env
     command: ["python", "main.py"]

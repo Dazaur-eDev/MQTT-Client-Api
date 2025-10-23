@@ -18,8 +18,11 @@ El proyecto está compuesto por dos servicios principales:
 └─────────────────┘    └─────────────────┘
 ```
 
-## Requisitos
+## Requisitos y Puertos
 
+- Python 3
+- Flash 3.1.2
+- paho_mqtt 2.1.0
 - Docker Compose
 - Puerto 1885 (Mosquitto)
 - Puerto 5000 (API REST)

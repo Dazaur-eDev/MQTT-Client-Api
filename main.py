@@ -29,7 +29,7 @@ def main():
 
     # Iniciar API REST en hilo separado
     def run_api():
-        app.run(host="0.0.0.0", port=5000)
+        app.run(host="0.0.0.0", port=6000)
 
     api_thread = threading.Thread(target=run_api, daemon=True)
     api_thread.start()
