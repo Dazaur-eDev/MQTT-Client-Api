@@ -40,4 +40,4 @@ venv/
 Thumbs.db
 mosquitto/config/passwords
 mosquitto/data/mosquitto.db
-
+mosquitto/log/mosquitto.log
