@@ -14,7 +14,7 @@ El proyecto está compuesto por dos servicios principales:
 ┌─────────────────┐    ┌─────────────────┐
 │   Mosquitto     │    │   Cliente MQTT  │
 │   (Broker)      │◄──►│   + API REST    │
-│   Puerto: 1885  │    │   Puerto: 5000  │
+│   Puerto: 1885  │    │   Puerto: 6000  │
 └─────────────────┘    └─────────────────┘
 ```
 
@@ -25,7 +25,7 @@ El proyecto está compuesto por dos servicios principales:
 - paho_mqtt 2.1.0
 - Docker Compose
 - Puerto 1885 (Mosquitto)
-- Puerto 5000 (API REST)
+- Puerto 6000 (API REST)
 - Puerto 1883 y 9001 (Cliente MQTT) 
 - [Mosquitto](https://mosquitto.org/download/)
 
@@ -73,7 +73,7 @@ Deberías ver algo como:
 ```
     Name                   Command               State                    Ports
 mosquitto-server   /docker-entrypoint.sh /usr ...   Up      0.0.0.0:1885->1883/tcp
-mqtt-app          python main.py                    Up      0.0.0.0:1883->1883/tcp, 0.0.0.0:5000->5000/tcp, 0.0.0.0:9001->9001/tcp
+mqtt-app          python main.py                    Up      0.0.0.0:1883->1883/tcp, 0.0.0.0:6000->6000/tcp, 0.0.0.0:9001->9001/tcp
 ```
 
 ### Ver logs en tiempo real
@@ -90,42 +90,42 @@ docker-compose logs -f mqtt-app
 
 ## API REST
 
-La aplicación expone una API REST en `http://localhost:5000` con los siguientes endpoints:
+La aplicación expone una API REST en `http://localhost:6000` con los siguientes endpoints:
 
 ### Suscribirse a un topic
 ```bash
-curl -X POST http://localhost:5000/subscribe \
+curl -X POST http://localhost:6000/subscribe \
   -H "Content-Type: application/json" \
   -d '{"topic": "sensors/temperature", "qos": 0}'
 ```
 
 ### Publicar un mensaje
 ```bash
-curl -X POST http://localhost:5000/publish \
+curl -X POST http://localhost:6000/publish \
   -H "Content-Type: application/json" \
   -d '{"topic": "sensors/temperature", "message": "25.5", "qos": 0}'
 ```
 
 ### Listar topics suscritos
 ```bash
-curl http://localhost:5000/topics
+curl http://localhost:6000/topics
 ```
 
 ### Obtener mensajes recientes
 ```bash
-curl http://localhost:5000/messages?limit=5
+curl http://localhost:6000/messages?limit=5
 ```
 
 ### Desuscribirse de un topic
 ```bash
-curl -X POST http://localhost:5000/unsubscribe \
+curl -X POST http://localhost:6000/unsubscribe \
   -H "Content-Type: application/json" \
   -d '{"topic": "sensors/temperature"}'
 ```
 
 ### Cambiar suscripción de topic
 ```bash
-curl -X POST http://localhost:5000/change_topic \
+curl -X POST http://localhost:6000/change_topic \
   -H "Content-Type: application/json" \
   -d '{"old_topic": "sensors/temperature", "new_topic": "sensors/humidity", "qos": 0}'
 ```
@@ -148,21 +148,21 @@ mosquitto_pub -h localhost -p 1885 -u admin -P 227589Icm -t "test/topic" -m "Hol
 
 **1. Suscribirse al topic:**
 ```bash
-curl -X POST http://localhost:5000/subscribe \
+curl -X POST http://localhost:6000/subscribe \
   -H "Content-Type: application/json" \
   -d '{"topic": "test/topic", "qos": 0}'
 ```
 
 **2. Publicar mensaje:**
 ```bash
-curl -X POST http://localhost:5000/publish \
+curl -X POST http://localhost:6000/publish \
   -H "Content-Type: application/json" \
   -d '{"topic": "test/topic", "message": "Hola desde API", "qos": 0}'
 ```
 
 **3. Ver mensajes recibidos:**
 ```bash
-curl http://localhost:5000/messages
+curl http://localhost:6000/messages
 ```
 
 ## Estructura del Proyecto
@@ -227,7 +227,7 @@ APP_LOG_LEVEL=DEBUG  # DEBUG, INFO, WARNING, ERROR
 ### Puerto ocupado
 ```bash
 # Verificar qué está usando el puerto
-lsof -i :5000
+lsof -i :6000
 lsof -i :1885
 
 # Cambiar puertos en docker-compose.yml si es necesario
